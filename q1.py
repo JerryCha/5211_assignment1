@@ -91,22 +91,32 @@ def change_feasible(denominations, multiplicities, change_amounts):
     #we make local copies so we can change these lists within the function
     multiplicities = multiplicities.copy()
     change_amounts = change_amounts.copy()
-    
+
     # DONE
+    # Get the length of demoninations
     k = len(denominations)
     for change in change_amounts:
+        # Test each coin or note whether it is enough to make change
         for i in range(k-1, -1, -1):
+            # Still need to change
             if change > 0:
+                # There are adequate quantities for given demonination
                 if multiplicities[i] > 0 and denominations[i] <= change:
+                    # Try to figure out the number of note/coin is needed
                     numOfDomina = change//denominations[i]
+                    # Enough
                     if numOfDomina <= multiplicities[i]:
                         multiplicities[i] -= numOfDomina
+                    # Not enough, take out all of the current demonination. Then see others.
                     else:
                         numOfDomina = multiplicities[i]
                         multiplicities[i] = 0
+                    # How much do I have to make after this round?
                     change = change - denominations[i]*numOfDomina
+        # Have been iterate all the multiplicities, still unable to make enough change. Failed
         if change > 0:
             return False
+    # All changes have been made, done.
     return True
 
 testlist = TestChangeFeasible()
